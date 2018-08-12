@@ -1,7 +1,39 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: vladolaru
- * Date: 11/08/2018
- * Time: 15:06
+ * The Users controller.
  */
+
+class AppUsers extends CoreController {
+
+	public function loginAction() {
+
+	}
+
+	public function forgotPasswordAction() {
+
+	}
+
+	public function resetPasswordAction() {
+
+	}
+
+	public function registerAction() {
+
+	}
+
+	/**
+	 * Before filter - called before an action method.
+	 *
+	 * @return void
+	 */
+	protected function before() {
+	}
+
+	/**
+	 * After filter - called after an action method.
+	 *
+	 * @return void
+	 */
+	protected function after() {
+	}
+}

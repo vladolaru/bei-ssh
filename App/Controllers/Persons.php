@@ -1,7 +1,23 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: vladolaru
- * Date: 11/08/2018
- * Time: 15:06
+ * The Persons controller.
  */
+
+class AppPersons extends CoreController {
+
+	/**
+	 * Before filter - called before an action method.
+	 *
+	 * @return void
+	 */
+	protected function before() {
+	}
+
+	/**
+	 * After filter - called after an action method.
+	 *
+	 * @return void
+	 */
+	protected function after() {
+	}
+}

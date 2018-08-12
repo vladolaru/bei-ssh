@@ -1,7 +1,8 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: vladolaru
- * Date: 11/08/2018
- * Time: 14:51
+ * Abstract class for our models.
  */
+
+abstract class CoreModel {
+
+}
