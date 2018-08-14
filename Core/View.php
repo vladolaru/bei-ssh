@@ -19,7 +19,7 @@ class CoreView {
 	 */
 	public static function render( $view, $args = [] ) {
 		extract( $args, EXTR_SKIP );
-		$file = dirname( __DIR__ ) . "/App/Views/$view";  // relative to Core directory
+		$file = ABSPATH . "/App/Views/$view";
 		if ( is_readable( $file ) ) {
 			require $file;
 		} else {
@@ -44,7 +44,7 @@ class CoreView {
 
 		header( 'Location: ' . $url );
 
-		exit();
+		exit;
 	}
 
 	/**
@@ -57,6 +57,6 @@ class CoreView {
 
 		// Grab the 404 view
 
-		exit();
+		exit;
 	}
 }

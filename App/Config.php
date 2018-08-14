@@ -6,6 +6,12 @@
 class AppConfig {
 
 	/**
+	 * The app current version.
+	 * @var string
+	 */
+	const VERSION = '0.5.0';
+
+	/**
 	 * The base URL where the app entry point resides.
 	 * @var string
 	 */
@@ -15,31 +21,51 @@ class AppConfig {
 	 * Database host
 	 * @var string
 	 */
-	const DB_HOST = 'your-database-host';
+	const DB_HOST = 'localhost';
+
+	/**
+	 * Database port
+	 * @var int
+	 */
+	const DB_PORT = 4002;
 
 	/**
 	 * Database name
 	 * @var string
 	 */
-	const DB_NAME = 'your-database-name';
+	const DB_NAME = 'ssh_main';
 
 	/**
 	 * Database user
 	 * @var string
 	 */
-	const DB_USER = 'your-database-user';
+	const DB_USER = 'ssh_main';
 
 	/**
 	 * Database password
 	 * @var string
 	 */
-	const DB_PASSWORD = 'your-database-password';
+	const DB_PASSWORD = 'pass';
 
 	/**
 	 * Show or hide error messages on screen
 	 * @var boolean
 	 */
 	const SHOW_ERRORS = true;
+
+	/**
+	 * The salt to be used for authentication.
+	 *
+	 * @var string
+	 */
+	const AUTH_SALT = '9WMCoQ5A4iqYM!w8549EPfl278KYTGLJQc0d2Ekyqvqo2zykQ98sIW1WBEvUXl7L';
+
+	/**
+	 * The name of the logged in cookie.
+	 *
+	 * @var string
+	 */
+	const LOGGED_IN_COOKIE = 'ssh_logged_in';
 
 	/**
 	 * Pre-configured routes that will be automatically registered on app init.
@@ -50,55 +76,59 @@ class AppConfig {
 	 */
 	public static $routes = [
 		'login' => [
-			'controller' => 'app-users',
+			'controller' => 'app-users-controller',
 			'action' => 'login',
 		],
 		'login/forgot-password' => [
-			'controller' => 'app-users',
+			'controller' => 'app-users-controller',
 			'action' => 'forgot-password',
 		],
 		'login/reset-password' => [
-			'controller' => 'app-users',
+			'controller' => 'app-users-controller',
 			'action' => 'reset-password',
 		],
 		'logout' => [
-			'controller' => 'app-users',
+			'controller' => 'app-users-controller',
 			'action' => 'logout',
 		],
 		'register' => [
-			'controller' => 'app-users',
+			'controller' => 'app-users-controller',
 			'action' => 'register',
 		],
 		'' => [
-			'controller' => 'app-persons',
-			'action' => 'index',
+			'controller' => 'app-persons-controller',
+			'action' => 'list',
 		],
 		'persons' => [
-			'controller' => 'app-persons',
-			'action' => 'index',
+			'controller' => 'app-persons-controller',
+			'action' => 'list',
 		],
 		'person/add' => [
-			'controller' => 'app-persons',
+			'controller' => 'app-persons-controller',
 			'action' => 'add',
 		],
-		'person/{id}' => [
-			'controller' => 'app-persons',
+		'person/{id:\d+}' => [
+			'controller' => 'app-persons-controller',
 			'action' => 'view',
 		],
-		'person/{id}/edit' => [
-			'controller' => 'app-persons',
+		'person/{id:\d+}/edit' => [
+			'controller' => 'app-persons-controller',
 			'action' => 'edit',
 		],
+		'person/{id:\d+}/remove' => [
+			'controller' => 'app-persons-controller',
+			'action' => 'remove',
+		],
 		'rounds' => [
-			'controller' => 'app-rounds',
-			'action' => 'index',
+			'controller' => 'app-rounds-controller',
+			'action' => 'list',
 		],
 		'round/new' => [
-			'controller' => 'app-rounds',
+			'controller' => 'app-rounds-controller',
 			'action' => 'new',
 		],
-		'round/{id}' => [
-			'controller' => 'app-rounds',
+		'round/{id:\d+}' => [
+			'controller' => 'app-rounds-controller',
 			'action' => 'view',
 		],
 	];

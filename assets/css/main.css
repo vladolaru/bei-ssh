@@ -1,0 +1,5 @@
+@media screen and (min-width: 1088px) {
+    .field.is-half-desktop {
+        width: 49%;
+    }
+}

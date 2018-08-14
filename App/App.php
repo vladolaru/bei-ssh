@@ -5,6 +5,8 @@
  * This is where everything gets loaded and fired up.
  */
 
+use Medoo\Medoo;
+
 /**
  * The class that functions as our app's front controller.
  *
@@ -16,6 +18,16 @@ final class App {
 	 * @var CoreRouter|null
 	 */
 	public $router = null;
+
+	/**
+	 * @var Medoo|null
+	 */
+	public $db = null;
+
+	/**
+	 * @var CoreAuth|null
+	 */
+	public $auth = null;
 
 	/**
 	 * The single instance of this class.
@@ -58,12 +70,12 @@ final class App {
 		/**
 		 * Loud up our controllers.
 		 */
-		self::autoloadDir( ABSPATH . '/App/Controllers' );
+		self::autoloadDir( ABSPATH . '/App/Controllers', -1 );
 
 		/**
 		 * Loud up our models.
 		 */
-		self::autoloadDir( ABSPATH . '/App/Models' );
+		self::autoloadDir( ABSPATH . '/App/Models', -1 );
 
 		/*
 		 * Initialize the router.
@@ -74,6 +86,16 @@ final class App {
 		 * Register any pre-configured routes.
 		 */
 		$this->registerConfigRoutes();
+
+		/*
+		 * Run the database tables creation queries.
+		 */
+		$this->dbInit();
+
+		/**
+		 * Initialize the auth logic.
+		 */
+		$this->auth = new CoreAuth();
 	}
 
 	public function registerConfigRoutes() {
@@ -88,8 +110,80 @@ final class App {
 	 * The main method that handles the request and delivers it to the appropriate controller.
 	 */
 	public function run() {
-
 		$this->router->dispatch( new CoreRequest() );
+	}
+
+	/**
+	 * Make sure that the needed tables exist.
+	 *
+	 * @throws Exception
+	 * @return bool
+	 */
+	protected function dbInit() {
+		$this->db = new Medoo([
+			'database_type' => 'mysql',
+			'server' => AppConfig::DB_HOST,
+			'port' => AppConfig::DB_PORT,
+			'database_name' => AppConfig::DB_NAME,
+			'username' => AppConfig::DB_USER,
+			'password' => AppConfig::DB_PASSWORD,
+			'charset' => 'utf8',
+		]);
+
+		if ( false === $this->db ) {
+			throw new \Error( 'We could not connect to the database!', 500 );
+		}
+
+		$result = $this->db->query( 'CREATE TABLE IF NOT EXISTS `users` (
+  `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `email` varchar(50) NOT NULL,
+  `password` varchar(100) NOT NULL,
+  `first_name` varchar(50) NULL,
+  `last_name` varchar(50) NULL,
+  `registered` datetime NOT NULL,
+  `modified` datetime NOT NULL
+) ENGINE=\'InnoDB\' COLLATE \'utf8_bin\' AUTO_INCREMENT=0;' );
+
+		if ( false === $result ) {
+			throw new \Error( 'We could not create the users table!', 500 );
+		}
+
+		$result = $this->db->query( 'CREATE TABLE IF NOT EXISTS `persons` (
+  `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `user_id` int(11) NOT NULL,
+  `first_name` varchar(50) NULL,
+  `last_name` varchar(50) NULL,
+  `email` varchar(100) NOT NULL,
+  `preferences` text NULL,
+  `private_notes` text NULL,
+  `created` datetime NOT NULL,
+  `modified` datetime NOT NULL,
+  INDEX user_id (user_id), 
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=\'InnoDB\' COLLATE \'utf8_bin\' AUTO_INCREMENT=0;' );
+
+		if ( false === $result ) {
+			throw new \Error( 'We could not create the persons table!', 500 );
+		}
+
+		$result = $this->db->query( 'CREATE TABLE IF NOT EXISTS `rounds` (
+  `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `user_id` int(11) NOT NULL,
+  `participants` longtext NULL,
+  `budget` float NOT NULL DEFAULT \'0\',
+  `email_title` text NULL,
+  `email_from` text NULL,
+  `email_template` longtext NULL,
+  `created` datetime NOT NULL,
+  INDEX user_id (user_id), 
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=\'InnoDB\' COLLATE \'utf8_bin\' AUTO_INCREMENT=0;' );
+
+		if ( false === $result ) {
+			throw new \Error( 'We could not create the rounds table!', 500 );
+		}
+
+		return true;
 	}
 
 	/**
