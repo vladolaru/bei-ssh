@@ -1,4 +1,10 @@
-# bei-ssh
+# SSH - Secret Santa's Helper
+
+This is a proof-of-concept app part of Pixelgrade's backend internship programme.
+
+It is not intended to cover all the situations and security requirements of a real life web app, but plans to go a decent way in that direction.
+
+It's main focus is to showcase a way (far from perfect) to approach a web app following the MVC design pattern.
 
 ## Nginx Config
 

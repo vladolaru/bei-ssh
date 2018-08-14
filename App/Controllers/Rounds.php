@@ -66,6 +66,7 @@ class AppRoundsController extends CoreController {
 			CoreView::redirect( AppConfig::BASE_URL . 'login?login-first=true' );
 		}
 
+		$messages = [];
 		$errors = [];
 
 		// Start with no data. We will store here any posted data so we can reshow it in case of error.
@@ -83,11 +84,11 @@ class AppRoundsController extends CoreController {
 			}
 
 			if ( ! empty( $this->request->data['email_template'] ) ) {
-				$roundData['email_template'] = trim( $this->request->data['email_template'] );
+				$roundData['email_template'] = $this->request->data['email_template'];
 			}
 
 			if ( isset( $this->request->data['participants'] ) ) {
-				$roundData['participants'] = trim( $this->request->data['participants'] );
+				$roundData['participants'] = array_map( 'intval', $this->request->data['participants'] );
 			}
 
 			if ( isset( $this->request->data['budget'] ) ) {
@@ -100,22 +101,60 @@ class AppRoundsController extends CoreController {
 			}
 
 			if ( empty( $errors ) ) {
-				// Bind the created round to the current logged in user.
-				$roundData['user_id'] =  App::instance()->auth->getCurrentUserId();
+				// Send the round emails first.
 
-				// We can create the round.
-				if ( false !== AppRoundsModel::createRound( $roundData ) ) {
-					// Success. Redirect to main page.
-					CoreView::redirect( AppConfig::BASE_URL . 'rounds?added=true' );
-				} else {
+				$persons = [];
+				foreach ( $roundData['participants'] as $personId ) {
+					$persons[] = AppPersonsModel::getPersonById( $personId, App::instance()->auth->getCurrentUserId() );
+				}
+
+				// Determine if this should be a test.
+				$testRun = false;
+				if ( isset( $this->request->data['test_pairing'] ) ) {
+					$testRun = true;
+				}
+
+				$result = null;
+				try {
+					$ssb = new SecretSantaBot( $persons, $testRun );
+					$result = $ssb->sendEmails( new AppRound( $roundData ) );
+				} catch( Exception $exception ) {
+					$errors[] = $exception->getMessage();
+				}
+
+				if ( false === $result ) {
 					$errors[] = 'There was an error and we couldn\'t send the Secret Santa round at this time. Please try again.';
+				} elseif ( ! empty( $result ) ) {
+					$messages[] = trim( $result );
+				}
+
+				if ( false === $testRun && empty( $errors ) ) {
+					// We can save the round details in the DB.
+
+					// Bind the created round to the current logged in user.
+					$roundData['user_id'] =  App::instance()->auth->getCurrentUserId();
+					if ( false == AppRoundsModel::createRound( $roundData ) ) {
+						$errors[] = 'There was an error and we couldn\'t send the Secret Santa round at this time. Please try again.';
+					}
 				}
 			}
 		}
 
+		// Provide a default email template.
+		if ( empty( $roundData['email_template'] ) ) {
+			$roundData['email_template'] = '<h2>SECRET SANTA EMAIL</h2>
+        		  <p>Dear <strong>%giver_first_name%</strong>,</p>
+        		  <p>This glorious year, you are giving the gift of Christmas to <strong>%receiver_first_name% %receiver_last_name%</strong>.</p>
+        		  <p>We recommend you try and stay with a $%budget% budget.</p>
+        		  <p>&nbsp;</p>
+        		  <p><small>This is an automated email sent by <a href="' . AppConfig::BASE_URL . '">Santa\'s Secret Helper</a></small></p>';
+		}
+
 		// If we've reached thus far, we should display the add round (edit empty round) form view.
 		CoreView::render( 'rounds/new.php', [
-			'round'      => new AppRound( $roundData ),
+			'round'       => new AppRound( $roundData ),
+			'persons'     => AppPersonsModel::getPersons( App::instance()->auth->getCurrentUserId() ),
+			'messages'    => $messages,
 			'errors'      => $errors,
 			'user'        => App::instance()->auth->getCurrentUser(),
 			'routeConfig' => $this->routeConfig,

@@ -131,6 +131,13 @@ li.round .round-controls {
     margin-bottom: 1em;
 }
 
+.select.is-multiple {
+    width: 100%;
+}
+.select.is-multiple select {
+    width: 100%;
+}
+
 .footer {
     padding: 3rem 1.5rem;
 }

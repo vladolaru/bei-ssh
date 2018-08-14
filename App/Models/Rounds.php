@@ -29,7 +29,7 @@ class AppRoundsModel {
 		$dbRoundsData = $db->select( 'rounds', [
 			'id(id)',
 			'user_id(userId)',
-			'participants(participants)',
+			'participants(participants)[Object]',
 			'budget(budget)',
 			'email_title(emailTitle)',
 			'email_from(emailFrom)',
@@ -83,7 +83,7 @@ class AppRoundsModel {
 		// Set up the default data
 		$dbData = [
 			'user_id' => null,
-			'participants' => '',
+			'participants' => [],
 			'budget' => 0,
 			'email_title' => '',
 			'email_from' => '',

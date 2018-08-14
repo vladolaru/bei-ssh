@@ -8,6 +8,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die;
 }
 
+/** @var array $messages */
+/** @var array $errors */
 /** @var AppPerson $person */
 ?>
 

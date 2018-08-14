@@ -8,6 +8,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die;
 }
 
+/** @var array $messages */
+/** @var array $errors */
 /** @var AppRound $round */
 ?>
 
@@ -30,9 +32,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<p><span class="detail-label">Round date:</span><span class="detail"><?php echo $round->created->format( 'jS F Y H:s'); ?></span></p>
 					<p><span class="detail-label">Number of participants:</span><span class="detail"><?php echo count( $round->participants ); ?></span></p>
 					<p><span class="detail-label">Participants:</span></p>
+					<?php foreach ( $round->participants as $personId ) {
+						$person = AppPersonsModel::getPersonById( $personId, App::instance()->auth->getCurrentUserId() );
+						if ( false === $person ) {
+							// This means that the person was deleted meantime.
+							echo '<p> - Person no longer in your list</p>';
+						} else {
+							echo '<p> - ' . $person->firstName . ' ' . $person->lastName . ' (' . $person->email . ')</p>';
+						}
+					} ?>
 					<p><span class="detail-label">Email title:</span><code class="detail"><?php echo $round->emailTitle; ?></code></p>
 					<p><span class="detail-label">Email from:</span><code class="detail"><?php echo $round->emailFrom; ?></code></p>
-					<p><span class="detail-label">Email template:</span><code class="detail"><?php echo $round->emailFrom; ?></code></p>
+					<p><span class="detail-label">Email template:</span><code class="detail"><?php echo nl2br( htmlentities( $round->emailTemplate ) ); ?></code></p>
 				</div>
 
 				<p>&nbsp;</p>

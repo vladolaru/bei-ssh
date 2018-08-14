@@ -8,6 +8,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die;
 }
 
+/** @var array $messages */
+/** @var array $errors */
+/** @var array $rounds */
 ?>
 
 <section class="section main">

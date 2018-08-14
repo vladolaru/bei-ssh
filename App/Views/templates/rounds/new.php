@@ -8,7 +8,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die;
 }
 
+/** @var array $messages */
+/** @var array $errors */
 /** @var AppRound $round */
+/** @var array $persons */
 ?>
 
 <section class="section main">
@@ -16,6 +19,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="columns is-centered">
 			<div class="column is-half">
 				<h2 class="title is-2">Let's get this sleigh going..</h2>
+
+				<?php if ( ! empty( $messages ) ) {
+					foreach ( $messages as $message ) { ?>
+						<div class="notification is-success">
+							<?php echo $message; ?>
+						</div>
+					<?php }
+				} ?>
 
 				<?php if ( ! empty( $errors ) ) {
 					foreach ( $errors as $error ) { ?>
@@ -29,9 +40,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 					<div class="field">
 						<label class="label">Choose your participants</label>
-						<p class="control">
-							<textarea class="textarea" name="participants" placeholder="Participants" rows="3"><?php echo $round->participants;?></textarea>
-						</p>
+						<div class="select control is-multiple">
+							<select name="participants[]" multiple size="5" required>
+								<?php foreach ( $persons as $person ) {
+									$selected = '';
+									if ( ! empty( $round->participants ) && in_array( $person->id, $round->participants ) ) {
+										$selected = 'selected';
+									}
+									?>
+									<option value="<?php echo $person->id; ?>" <?php echo $selected; ?>><?php echo $person->firstName . ' ' . $person->lastName; ?></option>
+								<?php } ?>
+							</select>
+						</div>
 					</div>
 
 					<div class="field">
@@ -68,6 +88,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<div class="field">
 						<p class="control">
 							<button type="submit" class="button is-primary">Send emails</button>
+							<button type="submit" name="test_pairing" class="button is-secondary">Test a pairing</button>
 						</p>
 					</div>
 				</form>

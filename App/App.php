@@ -68,12 +68,17 @@ final class App {
 		require_once ABSPATH . '/App/vendor/autoload.php';
 
 		/**
-		 * Loud up our controllers.
+		 * Load up our utils.
+		 */
+		self::autoloadDir( ABSPATH . '/App/Utils', -1 );
+
+		/**
+		 * Load up our controllers.
 		 */
 		self::autoloadDir( ABSPATH . '/App/Controllers', -1 );
 
 		/**
-		 * Loud up our models.
+		 * Load up our models.
 		 */
 		self::autoloadDir( ABSPATH . '/App/Models', -1 );
 
