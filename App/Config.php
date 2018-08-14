@@ -137,5 +137,9 @@ class AppConfig {
 			'controller' => 'app-rounds-controller',
 			'action' => 'view',
 		],
+		'round/{id:\d+}/view' => [
+			'controller' => 'app-rounds-controller',
+			'action' => 'view',
+		],
 	];
 }

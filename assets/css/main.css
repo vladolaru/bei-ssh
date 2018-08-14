@@ -3,3 +3,134 @@
         width: 49%;
     }
 }
+
+html {
+    background-color: #fafafa;
+}
+
+.section.main {
+    background-color: white;
+    min-height: 25rem;
+}
+
+.section.main .notification{
+    padding: 0.75em 1.25rem;
+    margin-bottom: 1rem;
+}
+
+a:not(.button) {
+    text-decoration: underline;
+}
+
+a.logo-link {
+    text-decoration: none;
+}
+
+.header .hero-head .container {
+    min-height: 2rem;
+    padding: 5px 0;
+}
+
+.header .hero-foot .container {
+    min-height: 2rem;
+}
+
+.header .hero-body {
+    padding: 1rem 1.5rem;
+}
+
+.header .title {
+    font-weight: bold;
+}
+
+.header .nav-main .button {
+    margin-left: 0.5rem;
+    border-radius: 4px 4px 0 0;
+    border-width: 0 0 1px 0;
+    border-color: #00d1b2;
+    text-decoration: none;
+    padding-left: 1.5em;
+    padding-right: 1.5em;
+    background-color: #e6e6e6;
+}
+
+.header .nav-main .button:hover {
+    background-color: white;
+    color: #00d1b2;
+}
+
+.header .nav-main .button.active {
+    border-width: 0;
+    background-color: white;
+}
+
+.header .nav-main .button.active:hover {
+    background-color: white;
+}
+
+ul.persons-list, ul.rounds-list {
+    float: left;
+    width: 100%;
+    margin: 1.5em 0;
+}
+
+ul.persons-list li, ul.rounds-list li {
+    list-style-type: none;
+
+}
+
+li.person, li.round {
+    clear: both;
+    float: left;
+    width: 100%;
+    padding: 0.5em 0;
+}
+
+li.person + li.person, li.round + li.round {
+    border-width: 1px 0 0 0;
+    border-color: #e8e8e8;
+    border-style: solid;
+
+    margin: 0;
+}
+
+li.person div, li.round div {
+    float: left;
+    margin-right: 1em;
+}
+
+li.person .person-name {
+    width: 30%;
+}
+
+li.person .person-email {
+    width: 40%;
+}
+
+li.person .person-controls {
+    float: right;
+}
+
+li.round .round-name {
+    width: 40%;
+}
+
+li.round .round-controls {
+    float: right;
+}
+
+.round-details .detail-label {
+    margin-right: 1em;
+    font-weight: bold;
+}
+
+.round-details code.detail {
+    float: left;
+    width: 100%;
+    margin-top: 0.5em;
+    margin-bottom: 1em;
+}
+
+.footer {
+    padding: 3rem 1.5rem;
+}

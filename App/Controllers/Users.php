@@ -16,6 +16,7 @@ class AppUsersController extends CoreController {
 		}
 
 		$errors = [];
+		$messages = [];
 
 		// We handle a submit from the user.
 		if ( 'POST' === $this->request->method ) {
@@ -46,8 +47,16 @@ class AppUsersController extends CoreController {
 			}
 		}
 
+		if ( ! empty( $this->request->query['login-first'] ) ) {
+			$messages[] = 'You need to login first.';
+		}
+
 		// If we've reached thus far, we should display the login form view.
-		CoreView::render('login.php', [ 'errors' => $errors, 'routeConfig' => $this->routeConfig ] );
+		CoreView::render( 'login/login.php', [
+			'messages'    => $messages,
+			'errors'      => $errors,
+			'routeConfig' => $this->routeConfig,
+		] );
 	}
 
 	public function logoutAction() {
@@ -100,7 +109,7 @@ class AppUsersController extends CoreController {
 		}
 
 		// If we've reached thus far, we should display the forgot password form view.
-		CoreView::render('forgot-password.php', [ 'messages' => $messages, 'errors' => $errors, 'routeConfig' => $this->routeConfig ] );
+		CoreView::render('login/forgot-password.php', [ 'messages' => $messages, 'errors' => $errors, 'routeConfig' => $this->routeConfig ] );
 	}
 
 	/**
@@ -203,7 +212,7 @@ class AppUsersController extends CoreController {
 		}
 
 		// If we've reached thus far, we should display the forgot password form view.
-		CoreView::render('reset-password.php', [ 'keyInfo' => $keyInfo, 'messages' => $messages, 'errors' => $errors, 'routeConfig' => $this->routeConfig ] );
+		CoreView::render('login/reset-password.php', [ 'keyInfo' => $keyInfo, 'messages' => $messages, 'errors' => $errors, 'routeConfig' => $this->routeConfig ] );
 	}
 
 	public function registerAction() {
@@ -258,7 +267,7 @@ class AppUsersController extends CoreController {
 		}
 
 		// If we've reached thus far, we should display the registration form view.
-		CoreView::render('register.php', [ 'errors' => $errors, 'routeConfig' => $this->routeConfig ] );
+		CoreView::render('login/register.php', [ 'errors' => $errors, 'routeConfig' => $this->routeConfig ] );
 	}
 
 	/**
@@ -269,13 +278,5 @@ class AppUsersController extends CoreController {
 	protected function before() {
 		// We attempt to login the user before every action.
 		App::instance()->auth->maybeLogIn( $this->request );
-	}
-
-	/**
-	 * After filter - called after an action method.
-	 *
-	 * @return void
-	 */
-	protected function after() {
 	}
 }

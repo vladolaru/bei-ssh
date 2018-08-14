@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 ?>
 
-<section class="section">
+<section class="section main">
 	<div class="container content">
 		<div class="columns is-centered">
 			<div class="column is-half">
@@ -43,8 +43,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 							<div class="round-name"><?php echo $round->created->format( 'jS F Y H:s'); ?></div>
 							<div class="round-email"><?php echo count( $round->participants ); ?> participants</div>
 							<div class="round-controls">
-								<a class="button is-small" href="<?php echo AppConfig::BASE_URL . 'round/' . $round->id . '/view'; ?>"><i class="fas fa-edit"></i></a>
-								<a class="button is-small" href="<?php echo AppConfig::BASE_URL . 'round/' . $round->id . '/remove'; ?>"><i class="fas fa-trash"></i></a>
+								<a class="button is-small" href="<?php echo AppConfig::BASE_URL . 'round/' . $round->id . '/view'; ?>"><i class="fas fa-eye"></i></a>
 							</div>
 						</li>
 					<?php }

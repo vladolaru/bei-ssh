@@ -52,15 +52,27 @@ class AppRound {
 		foreach ( $roundData as $key => $value ) {
 			switch ( $key ) {
 				case 'created':
-					$this->$key = new DateTime( $value );
+					$this->created = new DateTime( $value );
+					break;
+				case 'emailTitle':
+				case 'email_title':
+					$this->emailTitle = $value;
+					break;
+				case 'emailFrom':
+				case 'email_from':
+					$this->emailFrom = $value;
+					break;
+				case 'emailTemplate':
+				case 'email_template':
+					$this->emailTemplate = $value;
+					break;
+				case 'userId':
+				case 'user_id':
+					$this->userId = $value;
 					break;
 				case 'id':
-				case 'userId':
 				case 'participants':
 				case 'budget':
-				case 'emailTitle':
-				case 'emailFrom':
-				case 'emailTemplate':
 					$this->$key = $value;
 					break;
 				default:

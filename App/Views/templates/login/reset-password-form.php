@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /** @var array $errors */
 ?>
 
-<section class="section">
+<section class="section main">
 	<div class="container content">
 		<div class="columns is-centered">
 			<div class="column is-half">

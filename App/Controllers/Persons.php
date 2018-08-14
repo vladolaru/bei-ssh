@@ -16,10 +16,20 @@ class AppPersonsController extends CoreController {
 		}
 
 		$errors = [];
+		$messages = [];
+
+		if ( ! empty( $this->request->query['saved'] ) ) {
+			$messages[] = 'We have successfully saved the person\'s details.';
+		}
+
+		if ( ! empty( $this->request->query['added'] ) ) {
+			$messages[] = 'We have successfully added the person to your list.';
+		}
 
 		// If we've reached thus far, we should display the persons list view.
 		CoreView::render( 'persons/list.php', [
 			'persons'     => AppPersonsModel::getPersons( App::instance()->auth->getCurrentUserId() ),
+			'messages'    => $messages,
 			'errors'      => $errors,
 			'user'        => App::instance()->auth->getCurrentUser(),
 			'routeConfig' => $this->routeConfig,
@@ -223,13 +233,5 @@ class AppPersonsController extends CoreController {
 	protected function before() {
 		// We attempt to login the user before every action.
 		App::instance()->auth->maybeLogIn( $this->request );
-	}
-
-	/**
-	 * After filter - called after an action method.
-	 *
-	 * @return void
-	 */
-	protected function after() {
 	}
 }

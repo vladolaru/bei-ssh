@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /** @var AppRound $round */
 ?>
 
-<section class="section">
+<section class="section main">
 	<div class="container content">
 		<div class="columns is-centered">
 			<div class="column is-half">

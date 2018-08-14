@@ -16,10 +16,43 @@ class AppRoundsController extends CoreController {
 		}
 
 		$errors = [];
+		$messages = [];
+
+		if ( ! empty( $this->request->query['added'] ) ) {
+			$messages[] = 'We have successfully sent your Secret Santa round.';
+		}
 
 		// If we've reached thus far, we should display the rounds list view.
 		CoreView::render( 'rounds/list.php', [
-			'rounds'     => AppRoundsModel::getRounds( App::instance()->auth->getCurrentUserId() ),
+			'rounds'      => AppRoundsModel::getRounds( App::instance()->auth->getCurrentUserId() ),
+			'messages'    => $messages,
+			'errors'      => $errors,
+			'user'        => App::instance()->auth->getCurrentUser(),
+			'routeConfig' => $this->routeConfig,
+		] );
+	}
+
+	public function viewAction() {
+		// First check that a user is logged in.
+		if ( false === App::instance()->auth->getCurrentUser() ) {
+			// Redirect to login.
+			CoreView::redirect( AppConfig::BASE_URL . 'login?login-first=true' );
+		}
+
+		$errors = [];
+
+		$round = null;
+		if ( isset( $this->routeConfig['id'] ) ) {
+			$round = AppRoundsModel::getRoundById( $this->routeConfig['id'], App::instance()->auth->getCurrentUserId() );
+		}
+
+		if ( empty( $round ) ) {
+			throw new \Error( ' Invalid id.' );
+		}
+
+		// If we've reached thus far, we should display the single round view.
+		CoreView::render( 'rounds/view.php', [
+			'round'       => $round,
 			'errors'      => $errors,
 			'user'        => App::instance()->auth->getCurrentUser(),
 			'routeConfig' => $this->routeConfig,
@@ -35,10 +68,11 @@ class AppRoundsController extends CoreController {
 
 		$errors = [];
 
+		// Start with no data. We will store here any posted data so we can reshow it in case of error.
+		$roundData = [];
+
 		// We handle a submit from the user.
 		if ( 'POST' === $this->request->method ) {
-			// Gather the data.
-			$roundData = [];
 
 			if ( ! empty( $this->request->data['email_title'] ) ) {
 				$roundData['email_title'] = trim( $this->request->data['email_title'] );
@@ -74,59 +108,15 @@ class AppRoundsController extends CoreController {
 					// Success. Redirect to main page.
 					CoreView::redirect( AppConfig::BASE_URL . 'rounds?added=true' );
 				} else {
-					$errors[] = 'There was an error and we couldn\'t create the round at this time.';
+					$errors[] = 'There was an error and we couldn\'t send the Secret Santa round at this time. Please try again.';
 				}
 			}
 		}
 
 		// If we've reached thus far, we should display the add round (edit empty round) form view.
 		CoreView::render( 'rounds/new.php', [
-			'round'      => new AppRound( [] ),
+			'round'      => new AppRound( $roundData ),
 			'errors'      => $errors,
-			'user'        => App::instance()->auth->getCurrentUser(),
-			'routeConfig' => $this->routeConfig,
-		] );
-	}
-
-	public function removeAction() {
-		// First check that a user is logged in.
-		if ( false === App::instance()->auth->getCurrentUser() ) {
-			// Redirect to login.
-			CoreView::redirect( AppConfig::BASE_URL . 'login?login-first=true' );
-		}
-
-		$errors = [];
-		$messages = [];
-
-		$round = null;
-		if ( isset( $this->routeConfig['id'] ) ) {
-			$round = AppRoundsModel::getRoundById( $this->routeConfig['id'] );
-		}
-
-		if ( empty( $round ) ) {
-			throw new \Error( 'Invalid id' );
-		}
-
-		if ( $round->userId !== App::instance()->auth->getCurrentUserId() ) {
-			throw new \Error( 'This round doesn\'t belong to you. You are being sneaky!' );
-		}
-
-		if ( empty( $errors ) ) {
-
-			// We can remove the round.
-			if ( false !== AppRoundsModel::deleteRound( $round->id ) ) {
-				// Success.
-				$messages[] = 'The round was successfully removed from your list.';
-			} else {
-				$errors[] = 'There was an error and we couldn\'t remove the round at this time.';
-			}
-		}
-
-		// If we've reached thus far, we should display the rounds list view.
-		CoreView::render( 'rounds/list.php', [
-			'rounds'     => AppRoundsModel::getRounds( App::instance()->auth->getCurrentUserId() ),
-			'errors'      => $errors,
-			'messages'    => $messages,
 			'user'        => App::instance()->auth->getCurrentUser(),
 			'routeConfig' => $this->routeConfig,
 		] );
@@ -140,13 +130,5 @@ class AppRoundsController extends CoreController {
 	protected function before() {
 		// We attempt to login the user before every action.
 		App::instance()->auth->maybeLogIn( $this->request );
-	}
-
-	/**
-	 * After filter - called after an action method.
-	 *
-	 * @return void
-	 */
-	protected function after() {
 	}
 }
