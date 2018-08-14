@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 include ABSPATH . '/App/Views/templates/header.php';
 
-// The registration form
+// The login form
 include ABSPATH . '/App/Views/templates/login/login-form.php';
 
 include ABSPATH . '/App/Views/templates/footer.php';

@@ -1,7 +1,16 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: vladolaru
- * Date: 11/08/2018
- * Time: 15:01
+ * The reset password form view.
  */
+
+// Bail if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) {
+	die;
+}
+
+include ABSPATH . '/App/Views/templates/header.php';
+
+// The reset password form
+include ABSPATH . '/App/Views/templates/login/reset-password-form.php';
+
+include ABSPATH . '/App/Views/templates/footer.php';

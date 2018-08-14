@@ -16,6 +16,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<div class="column is-half">
 				<h2 class="title is-2">You are just one step away..</h2>
 
+				<?php if ( ! empty( $messages ) ) {
+					foreach ( $messages as $message ) { ?>
+						<div class="notification is-success">
+							<?php echo $message; ?>
+						</div>
+					<?php }
+				} ?>
+
 				<?php if ( ! empty( $errors ) ) {
 					foreach ( $errors as $error ) { ?>
 						<div class="notification is-danger">

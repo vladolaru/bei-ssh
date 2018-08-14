@@ -221,6 +221,7 @@ class AppPersonsController extends CoreController {
 	 * @return void
 	 */
 	protected function before() {
+		// We attempt to login the user before every action.
 		App::instance()->auth->maybeLogIn( $this->request );
 	}
 

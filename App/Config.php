@@ -18,6 +18,12 @@ class AppConfig {
 	const BASE_URL = 'http://ssh.local/bei-ssh/';
 
 	/**
+	 * The email address that will be used for administrative purposes.
+	 * @var string
+	 */
+	const ADMIN_EMAIL = 'dev-email@flywheel.local';
+
+	/**
 	 * Database host
 	 * @var string
 	 */

@@ -14,6 +14,11 @@ class AppRound {
 	public $id = null;
 
 	/**
+	 * @var int|null
+	 */
+	public $userId = null;
+
+	/**
 	 * @var array|null
 	 */
 	public $participants = null;
