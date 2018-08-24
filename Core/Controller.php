@@ -4,7 +4,7 @@
  */
 
 /**
- * Base controller.
+ * Core controller.
  */
 abstract class CoreController {
 	/**

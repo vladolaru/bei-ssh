@@ -8,6 +8,12 @@
  */
 class AppUsersController extends CoreController {
 
+	public function privacyAction() {
+		CoreView::render( 'privacy.php', [
+			'routeConfig' => $this->routeConfig,
+		] );
+	}
+
 	public function loginAction() {
 		// First check that a user is not logged in.
 		if ( App::instance()->auth->getCurrentUser() ) {
@@ -50,6 +56,12 @@ class AppUsersController extends CoreController {
 		if ( ! empty( $this->request->query['login-first'] ) ) {
 			$messages[] = 'You need to login first.';
 		}
+
+
+		if ( ! empty( $this->request->query['logged-out'] ) ) {
+			$messages[] = 'Come back 😢';
+		}
+
 
 		// If we've reached thus far, we should display the login form view.
 		CoreView::render( 'login/login.php', [

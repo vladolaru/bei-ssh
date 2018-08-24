@@ -141,5 +141,9 @@ class AppConfig {
 			'controller' => 'app-rounds-controller',
 			'action' => 'view',
 		],
+		'privacy' => [
+			'controller' => 'app-users-controller',
+			'action' => 'privacy',
+		],
 	];
 }

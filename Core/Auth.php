@@ -1,8 +1,13 @@
 <?php
 /**
  * Class to handle our authentication needs.
+ *
+ * Right now it handles only cookie authentication. Nothing fancy like OAuth.
  */
 
+/**
+ * Class CoreAuth
+ */
 class CoreAuth {
 
 	/**
@@ -56,6 +61,11 @@ class CoreAuth {
 		return $wasLoggedIn;
 	}
 
+	/**
+	 * Set the authentication cookie with the info for a given user.
+	 *
+	 * @param AppUser $user
+	 */
 	public function setCookie( $user ) {
 		// Remember for 10 days.
 		$expiration = time() + 10 * DAY_IN_SECONDS ;
@@ -114,7 +124,7 @@ class CoreAuth {
 			return '';
 		}
 
-		// We will use a fragment of the hashed password in the cookie hash key, for further uniqueness.
+		// We will use a fragment of the hashed password as the cookie hash key, for further uniqueness.
 		$pass_frag = substr($user->password, 8, 4);
 		$key = $this->hash( $user->email . '|' . $pass_frag . '|' . $expiration );
 		$hash = hash_hmac( 'sha256', $user->email . '|' . $expiration , $key );
@@ -189,7 +199,7 @@ class CoreAuth {
 	}
 
 	/**
-	 * Get hash of given string.
+	 * Get hash of a given string.
 	 *
 	 * @param string $data   Plain text to hash.
 	 * @return string Hash of $data
@@ -233,10 +243,25 @@ class CoreAuth {
 		}
 	}
 
+	/**
+	 * Get a password has for a given plain text passsword.
+	 *
+	 * @param string $plainPassword
+	 *
+	 * @return bool|string
+	 */
 	public function getPasswordHash( $plainPassword ) {
 		return password_hash( $plainPassword, PASSWORD_BCRYPT );
 	}
 
+	/**
+	 * Verify if a given plain text password matches a password hash.
+	 *
+	 * @param string $plainPassword
+	 * @param string $hash
+	 *
+	 * @return bool
+	 */
 	public function verifyPassword( $plainPassword, $hash ) {
 		return password_verify( $plainPassword, $hash );
 	}

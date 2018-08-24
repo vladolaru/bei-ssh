@@ -3,6 +3,9 @@
  * Class to route requests to the appropriate controllers.
  */
 
+/**
+ * Class CoreRouter
+ */
 class CoreRouter {
 
 	/**
@@ -19,7 +22,7 @@ class CoreRouter {
 	protected $matchedConfig = [];
 
 	/**
-	 * Add a route to the routing table
+	 * Add a route to the routing table.
 	 *
 	 * @param string $route  The route URL.
 	 * @param array  $config Configuration like controller, action, and so on.
@@ -27,11 +30,11 @@ class CoreRouter {
 	 * @return void
 	 */
 	public function add( $route, $config = [] ) {
-		// Convert the route to a regular expression: escape forward slashes.
+		// Convert the route to a regular expression (RegEx): escape forward slashes.
 		$route = preg_replace( '/\//', '\\/', $route );
-		// Convert variables e.g. {controller}
+		// Convert route variables e.g. {controller}
 		$route = preg_replace( '/\{([a-z]+)\}/', '(?P<\1>[a-z-]+)', $route );
-		// Convert variables with custom regular expressions e.g. {id:\d+}
+		// Convert route variables with custom regular expressions e.g. {id:\d+}
 		$route = preg_replace( '/\{([a-z]+):([^\}]+)\}/', '(?P<\1>\2)', $route );
 		// Add start and end delimiters, and case insensitive flag
 		$route = '/^' . $route . '$/i';

@@ -18,21 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<div class="column is-half">
 				<h2 class="title is-2">Get that Santa Going..</h2>
 
-				<?php if ( ! empty( $messages ) ) {
-					foreach ( $messages as $message ) { ?>
-						<div class="notification is-success">
-							<?php echo $message; ?>
-						</div>
-					<?php }
-				} ?>
-
-				<?php if ( ! empty( $errors ) ) {
-					foreach ( $errors as $error ) { ?>
-						<div class="notification is-danger">
-							<?php echo $error; ?>
-						</div>
-					<?php }
-				} ?>
+				<?php include ABSPATH . '/App/Views/templates/errors-messages.php'; ?>
 
 				<form id="login" method="post">
 

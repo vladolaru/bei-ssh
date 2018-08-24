@@ -1,6 +1,6 @@
 <?php
 /**
- * Error handling class.
+ * Error and exception handling class.
  */
 
 /**
@@ -39,7 +39,10 @@ class CoreError {
 		if ( $code != 404 ) {
 			$code = 500;
 		}
+		// Set the HTTP request response code.
 		http_response_code( $code );
+
+		// Depending on how the app is configured, either display the error or log it in a file log.
 		if ( AppConfig::SHOW_ERRORS ) {
 			echo "<h1>Fatal error</h1>";
 			echo "<p>Uncaught exception: '" . get_class( $exception ) . "'</p>";
@@ -54,7 +57,7 @@ class CoreError {
 			$message .= "\nStack trace: " . $exception->getTraceAsString();
 			$message .= "\nThrown in '" . $exception->getFile() . "' on line " . $exception->getLine();
 			error_log( $message );
-			View::renderTemplate( "$code.html" );
+			CoreView::render( "$code.php" );
 		}
 	}
 }

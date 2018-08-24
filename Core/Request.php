@@ -1,6 +1,6 @@
 <?php
 /**
- * The class that holds the information about a HTTP request.
+ * The class that holds the information about a received HTTP request.
  */
 
 /**

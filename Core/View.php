@@ -33,7 +33,7 @@ class CoreView {
 	 * Please note that nothing should be sent to the output before calling this. If output has started, this will not work as expected.
 	 *
 	 * @param string $url
-	 * @param bool $permanent If true we will redirect with the 301 code.
+	 * @param bool $permanent If true we will redirect with the 301 code, else we'll use the 302 HTTP response code.
 	 */
 	public static function redirect( $url, $permanent = false ) {
 		if ( $permanent ) {
@@ -48,14 +48,29 @@ class CoreView {
 	}
 
 	/**
-	 * Show a 404 view and stop execution.
+	 * Show a 404 page and stop execution.
 	 *
 	 * Please note that nothing should be sent to the output before calling this. If output has started, this will not work as expected.
 	 */
 	public static function show404() {
 		http_response_code( 404 );
 
-		// Grab the 404 view
+		// Display the 404 page.
+		CoreView::render( '404.php' );
+
+		exit;
+	}
+
+	/**
+	 * Show a 500 page and stop execution.
+	 *
+	 * Please note that nothing should be sent to the output before calling this. If output has started, this will not work as expected.
+	 */
+	public static function show500() {
+		http_response_code( 500 );
+
+		// Display the 500 page.
+		CoreView::render( '500.php' );
 
 		exit;
 	}

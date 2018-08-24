@@ -94,49 +94,20 @@ class SecretSantaBot {
 				/** @var AppPerson $receiver */
 				$receiver = $pair[1];
 
-				$giver_gravatar    = '<img class="gravatar" src="https://www.gravatar.com/avatar/' . md5( strtolower( $giver->email ) ) . '?s=30" alt="gravatar" />';
-				$receiver_gravatar = '<img class="gravatar" src="https://www.gravatar.com/avatar/' . md5( strtolower( $receiver->email ) ) . '?s=30" alt="gravatar" />';
-
-				// Process tags
-				$message = $round->emailTemplate;
-				if ( false !== strpos( $message, '%giver_first_name%' ) ) {
-					$message = str_replace( '%giver_first_name%', $giver->firstName, $message );
-				}
-				if ( false !== strpos( $message, '%giver_last_name%' ) ) {
-					$message = str_replace( '%giver_last_name%', $giver->lastName, $message );
-				}
-				if ( false !== strpos( $message, '%giver_email%' ) ) {
-					$message = str_replace( '%giver_email%', $giver->email, $message );
-				}
-				if ( false !== strpos( $message, '%giver_gravatar%' ) ) {
-					$message = str_replace( '%giver_gravatar%', $giver_gravatar, $message );
-				}
-
-				if ( false !== strpos( $message, '%receiver_first_name%' ) ) {
-					$message = str_replace( '%receiver_first_name%', $receiver->firstName, $message );
-				}
-				if ( false !== strpos( $message, '%receiver_last_name%' ) ) {
-					$message = str_replace( '%receiver_last_name%', $receiver->lastName, $message );
-				}
-				if ( false !== strpos( $message, '%receiver_email%' ) ) {
-					$message = str_replace( '%receiver_email%', $receiver->email, $message );
-				}
-				if ( false !== strpos( $message, '%receiver_gravatar%' ) ) {
-					$message = str_replace( '%receiver_gravatar%', $receiver_gravatar, $message );
-				}
-
-				if ( false !== strpos( $message, '%budget%' ) ) {
-					$message = str_replace( '%budget%', $round->budget, $message );
-				}
+				// Process content tags
+				$message = $this->parseContentTags( $round->emailTemplate, $giver, $receiver, $round );
+				$title = $this->parseContentTags( $round->emailTitle, $giver, $receiver, $round );
 
 				$headers = 'MIME-Version: 1.0' . "\r\n";
 				$headers .= 'Content-type: text/html; charset=utf-8' . "\r\n";
 				$headers .= 'From: ' . $round->emailFrom;
 
+				$giver_gravatar    = '<img class="gravatar" src="https://www.gravatar.com/avatar/' . md5( strtolower( $giver->email ) ) . '?s=30" alt="gravatar" />';
+				$receiver_gravatar = '<img class="gravatar" src="https://www.gravatar.com/avatar/' . md5( strtolower( $receiver->email ) ) . '?s=30" alt="gravatar" />';
 				if ( $this->test_mode ) {
 					$output .= "<li>$giver_gravatar <strong>{$giver->firstName}</strong> is giving to <strong>{$receiver->firstName}</strong> $receiver_gravatar</li>";
 				} else {
-					$sent = mail( $giver->email, $round->emailTitle, $message, $headers );
+					$sent = mail( $giver->email, $title, $message, $headers );
 					$output .= "<li>$giver_gravatar Sent email to: <strong>{$giver->email}</strong>.</li>";
 				}
 			}
@@ -199,5 +170,52 @@ class SecretSantaBot {
 		$this->paired = $paired;
 
 		return $paired;
+	}
+
+	/**
+	 * Replace content tags with their value depending on the given context params.
+	 *
+	 * @param string $content
+	 * @param AppPerson $giver
+	 * @param AppPerson $receiver
+	 * @param AppRound $round
+	 *
+	 * @return string
+	 */
+	protected function parseContentTags( $content, $giver, $receiver, $round ) {
+		$giver_gravatar    = '<img class="gravatar" src="https://www.gravatar.com/avatar/' . md5( strtolower( $giver->email ) ) . '?s=30" alt="gravatar" />';
+		$receiver_gravatar = '<img class="gravatar" src="https://www.gravatar.com/avatar/' . md5( strtolower( $receiver->email ) ) . '?s=30" alt="gravatar" />';
+
+		if ( false !== strpos( $content, '%giver_first_name%' ) ) {
+			$content = str_replace( '%giver_first_name%', $giver->firstName, $content );
+		}
+		if ( false !== strpos( $content, '%giver_last_name%' ) ) {
+			$content = str_replace( '%giver_last_name%', $giver->lastName, $content );
+		}
+		if ( false !== strpos( $content, '%giver_email%' ) ) {
+			$content = str_replace( '%giver_email%', $giver->email, $content );
+		}
+		if ( false !== strpos( $content, '%giver_gravatar%' ) ) {
+			$content = str_replace( '%giver_gravatar%', $giver_gravatar, $content );
+		}
+
+		if ( false !== strpos( $content, '%receiver_first_name%' ) ) {
+			$content = str_replace( '%receiver_first_name%', $receiver->firstName, $content );
+		}
+		if ( false !== strpos( $content, '%receiver_last_name%' ) ) {
+			$content = str_replace( '%receiver_last_name%', $receiver->lastName, $content );
+		}
+		if ( false !== strpos( $content, '%receiver_email%' ) ) {
+			$content = str_replace( '%receiver_email%', $receiver->email, $content );
+		}
+		if ( false !== strpos( $content, '%receiver_gravatar%' ) ) {
+			$content = str_replace( '%receiver_gravatar%', $receiver_gravatar, $content );
+		}
+
+		if ( false !== strpos( $content, '%budget%' ) ) {
+			$content = str_replace( '%budget%', $round->budget, $content );
+		}
+
+		return $content;
 	}
 }
